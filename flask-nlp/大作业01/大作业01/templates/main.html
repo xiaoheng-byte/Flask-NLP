@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <title>Python 语料处理</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="d1" style="width:800px;margin:10px">
+        <ul id="myTab" class="nav nav-tabs">
+            <li class="active">
+                <a href="#a" data-toggle="tab">首页</a>
+            </li>
+            <li><a href="#a1" data-toggle="tab">分词</a></li>
+            <li><a href="#a2" data-toggle="tab">词性标注</a></li>
+            <li><a href="#a3" data-toggle="tab">命名实体识别</a></li>
+            <li><a href="#a4" data-toggle="tab">情感分类</a></li>
+            <li><a href="#a5" data-toggle="tab">词云展示</a></li>
+        </ul>
+
+        <div id="myTabContent" class="tab-content">
+          <div class="tab-pane fade in active" id="a">
+                <br/><br/>
+        <h1>&nbsp;&nbsp;&nbsp;欢迎使用python语料处理！</h1>
+        <br/>
+        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请点击上部导航栏跳转至相应功能</h4>
+            </div>
+
+            <div class="tab-pane fade" id="a1">
+                <div class="container" style="position: relative;width:100%;height:100vh;">
+                    <div class="left" style="position: absolute;left: 10px;width: 100%;height: 100%;">
+                        <br />
+                        <span class="label label-primary" style="font-size: 16px;">请输入需要处理的文本</span>
+                        <br />
+                        <textarea id="txt" style="width:400px; height:300px;"></textarea>
+                        <div class="select">
+                            <div>
+                                <Row type="flex" justify="space-around" align="middle">
+                                    <Col span={2} push={5}>
+                                    <button type="primary" style="color:SteelBlue;font-size: 14px;display: flex;"
+                                        class="selectButton" onclick="segmentation()">提交</button>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right" style="width: 100%;height: 100%;position: absolute;left: 600px;">
+                        <br /><span class="label label-primary" style="font-size: 15px;">结果展示</span><br /><br />
+                        <div id="show"></div>
+                        <script type="text/javascript">
+                            var showText = document.getElementById('show')
+                            var reqUrl = " "
+
+                            function segmentation() {
+                                reqUrl = "http://127.0.0.1:5000/segmentation"
+                                submmit()
+                            }
+
+                            function submmit() {
+                                console.log($("#txt").val())
+                                var data = $("#txt").val()
+                                $.ajax({
+                                    url: reqUrl, //请求的url地址
+                                    dataType: "json", //返回格式为json
+                                    async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+                                    data: {
+                                        "text": data
+                                    }, //参数值
+                                    type: "GET", //请求方式
+                                    success: function (req) {
+                                        //请求成功时处理
+                                        console.log('成功', req)
+                                        showTextDiv(req)
+                                    },
+                                    error: function () {
+                                        //请求出错处理
+                                        alert("异常！");
+                                    }
+                                });
+                            }
+
+                            function setDiv(item) {
+
+                                var div = '<div class="showdiv"  ">' + item + '</div>'
+                                return div
+                            }
+
+                            function showTextDiv(data) {
+                                var html = ''
+                                for (var i = 0; i < data.length; i++) {
+                                    html += setDiv(data[i])
+                                }
+                                showText.innerHTML = html
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="a2">
+                <div class="container" style="position: relative;width:100%;height:100vh;">
+                    <div class="left" style="position: absolute;left: 10px;width: 100%;height: 100%;">
+                        <br />
+                        <span class="label label-primary" style="font-size: 16px;">请输入需要处理的文本</span>
+                        <br />
+                        <textarea id="txt2" style="width:400px; height:300px;"></textarea>
+                        <div class="select">
+                            <div>
+                                <Row type="flex" justify="space-around" align="middle">
+                                    <Col span={2} push={5}>
+                                    <button type="primary" style="color:SteelBlue;font-size: 14px;display: flex;"
+                                        class="selectButton2" onclick="pos()">提交</button>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right" style="width: 100%;height: 100%;position: absolute;left: 600px;">
+                        <br /><span class="label label-primary" style="font-size: 15px;">结果展示</span><br /><br />
+                        <div id="show2"></div>
+                        <script type="text/javascript">
+                            var showText2 = document.getElementById('show2')
+                            var reqUrl = " "
+
+                            function pos() {
+                                reqUrl = "http://127.0.0.1:5000/pos"
+                                submmit2()
+                            }
+
+                            function submmit2() {
+                                console.log($("#txt2").val())
+                                var data = $("#txt2").val()
+                                $.ajax({
+                                    url: reqUrl, //请求的url地址
+                                    dataType: "json", //返回格式为json
+                                    async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+                                    data: {
+                                        "text": data
+                                    }, //参数值
+                                    type: "GET", //请求方式
+                                    success: function (req) {
+                                        //请求成功时处理
+                                        console.log('成功', req)
+                                        showTextDiv2(req)
+                                    },
+                                    error: function () {
+                                        //请求出错处理
+                                        alert("异常！");
+                                    }
+                                });
+                            }
+
+                            function setDiv2(item) {
+                                var div2 = '<div class="showdiv2"  ">' + item + '</div>'
+                                return div2
+                            }
+
+                            function showTextDiv2(data) {
+                                var html2 = ''
+                                for (var i = 0; i < data.length; i++) {
+                                    html2 += setDiv2(data[i])
+                                }
+                                showText2.innerHTML = html2
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="a3">
+                <div class="container" style="position: relative;width:100%;height:100vh;">
+                    <div class="left" style="position: absolute;left: 10px;width: 100%;height: 100%;">
+                        <br />
+                        <span class="label label-primary" style="font-size: 16px;">请输入需要处理的文本</span>
+                        <br />
+                        <textarea id="txt3" style="width:400px; height:300px;"></textarea>
+                        <div class="select">
+                            <div>
+                                <Row type="flex" justify="space-around" align="middle">
+                                    <Col span={2} push={5}>
+                                    <button type="primary" style="color:SteelBlue;font-size: 14px;display: flex;"
+                                        class="selectButton3" onclick="ner()">提交</button>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right" style="width: 100%;height: 100%;position: absolute;left: 600px;">
+                        <br /><span class="label label-primary" style="font-size: 15px;">结果展示</span><br /><br />
+                        <div id="show3"></div>
+                        <script type="text/javascript">
+                            var showText3 = document.getElementById('show3')
+                            var reqUrl = " "
+
+                            function ner() {
+                                reqUrl = "http://127.0.0.1:5000/ner"
+                                submmit3()
+                            }
+
+                            function submmit3() {
+                                console.log($("#txt3").val())
+                                var data = $("#txt3").val()
+                                $.ajax({
+                                    url: reqUrl, //请求的url地址
+                                    dataType: "json", //返回格式为json
+                                    async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+                                    data: {
+                                        "text": data
+                                    }, //参数值
+                                    type: "GET", //请求方式
+                                    success: function (req) {
+                                        //请求成功时处理
+                                        console.log('成功', req)
+                                        showTextDiv3(req)
+                                    },
+                                    error: function () {
+                                        //请求出错处理
+                                        alert("异常！");
+                                    }
+                                });
+                            }
+
+                            function setDiv3(item) {
+                                var div3 = '<div class="showdiv3"  ">' + item + '</div>'
+                                return div3
+                            }
+
+                            function showTextDiv3(data) {
+                                var html3 = ''
+                                for (var i = 0; i < data.length; i++) {
+                                    html3 += setDiv3(data[i])
+                                }
+                                showText3.innerHTML = html3
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="a4">
+                <div class="container" style="position: relative;width:100%;height:100vh;">
+                    <div class="left" style="position: absolute;left: 10px;width: 100%;height: 100%;">
+                        <br />
+                        <span class="label label-primary" style="font-size: 16px;">请输入需要处理的文本</span>
+                        <br />
+                        <textarea id="txt4" style="width:400px; height:300px;"></textarea>
+                        <div class="select">
+                            <div>
+                                <Row type="flex" justify="space-around" align="middle">
+                                    <Col span={2} push={5}>
+                                    <button type="primary" style="color:SteelBlue;font-size: 14px;display: flex;"
+                                        class="selectButton4" onclick="sentiment()">提交</button>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right" style="width: 100%;height: 100%;position: absolute;left: 600px;">
+                        <br /><span class="label label-primary" style="font-size: 15px;">结果展示</span><br /><br />
+                        <div id="show4"></div>
+                        <script type="text/javascript">
+                            var showText4 = document.getElementById('show4')
+                            var reqUrl = " "
+
+                            function sentiment() {
+                                reqUrl = "http://127.0.0.1:5000/sentiment"
+                                submmit4()
+                            }
+
+                            function submmit4() {
+                                console.log($("#txt4").val())
+                                var data = $("#txt4").val()
+                                $.ajax({
+                                    url: reqUrl, //请求的url地址
+                                    dataType: "json", //返回格式为json
+                                    async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+                                    data: {
+                                        "text": data
+                                    }, //参数值
+                                    type: "GET", //请求方式
+                                    success: function (req) {
+                                        //请求成功时处理
+                                        console.log('成功', req)
+                                        showTextDiv4(req)
+                                    },
+                                    error: function () {
+                                        //请求出错处理
+                                        alert("异常！");
+                                    }
+                                });
+                            }
+
+                            function setDiv4(item) {
+                                var div4 = '<div class="showdiv4"  ">' + item + '</div>'
+                                return div4
+                            }
+
+                            function showTextDiv4(data) {
+                                var html4 = ''
+                                for (var i = 0; i < data.length; i++) {
+                                    html4 += setDiv4(data[i])
+                                }
+                                showText4.innerHTML = html4
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="a5">
+                <div class="container" style="position: relative;width:100%;height:100vh;">
+                    <div class="left" style="position: absolute;left: 10px;width: 100%;height: 100%;">
+                        <br />
+                        <span class="label label-primary" style="font-size: 16px;">请输入需要处理的文本</span>
+                        <br />
+                        <textarea id="txt5" style="width:400px; height:300px;"></textarea>
+                        <div class="select">
+                            <div>
+                                <Row type="flex" justify="space-around" align="middle">
+                                    <Col span={2} push={5}>
+                                    <button type="primary" style="color:SteelBlue;font-size: 14px;display: flex;"
+                                        class="selectButton5" onclick="wordclouds()">提交</button>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right" style="width: 100%;height: 100%;position: absolute;left: 600px;">
+                        <br /><span class="label label-primary" style="font-size: 15px;">结果展示</span><br /><br />
+                        <div id="show5"></div>
+                        <script type="text/javascript">
+                            var showText5 = document.getElementById('show5')
+                            var reqUrl = " "
+
+                            function wordclouds() {
+                                reqUrl = "http://127.0.0.1:5000/wordcloud"
+                                submmit5()
+                            }
+
+                            function submmit5() {
+                                console.log($("#txt5").val())
+                                var data = $("#txt5").val()
+                                $.ajax({
+                                    url: reqUrl, //请求的url地址
+                                    dataType: "text",
+                                    async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+                                    data: {
+                                        "text": data
+                                    }, //参数值
+                                    type: "GET", //请求方式
+                                    success: function (req) {
+                                        //请求成功时处理
+                                        console.log('成功', req)
+                                        showTextDiv5(req)
+                                    },
+                                    error: function () {
+                                        //请求出错处理
+                                        alert("异常！");
+                                    }
+                                });
+                            }
+
+                            function showTextDiv5(data) {
+                                var html5 = ''
+                                html5 = "<img src=../" + data + " width='400'/>"
+                                showText5.innerHTML = html5
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
